@@ -109,3 +109,36 @@ To scale down the Service to 2 replicas
 List the Deployments to check
 `kubectl get deployments`
 `kubectl get pods -o wide`
+
+## Updating Your App
+
+To update the image of the application to version 2  
+
+`kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2`
+
+
+check that the App is running
+`kubectl describe services/kubernetes-bootcamp`
+
+Create an environment variable called NODE_PORT  
+`export NODE_PORT=$(kubectl get services/kubernetes-bootcamp -o go-template='{{(index .spec.ports 0).nodePort}}')`
+
+`echo NODE_PORT=$NODE_PORT`
+
+
+The update can be confirmed  
+`kubectl rollout status deployments/kubernetes-bootcamp`  
+
+deploy image tagged as v10  
+`kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10`
+
+the Pods should give more insights  
+`kubectl describe pods`
+There is no image called v10 in the repository   
+
+roll back to our previously working version  
+`kubectl rollout undo deployments/kubernetes-bootcamp`  
+
+Check again the image deployed  
+`kubectl describe pods`  
+
